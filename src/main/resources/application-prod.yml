@@ -1,0 +1,5 @@
+
+site:
+  basePath: @basePath@
+  printx: @print.x@
+  printw: @print.w@

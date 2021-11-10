@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>图片上传</title>
+    <!--
+    <script src="https://unpkg.com/vue@next"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-plus/lib/index.full.js"></script>
+
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+    <script src="../element-plus/vue.js"></script>
+    <link rel="stylesheet" href="../element-plus/index.css">
+    <script src="../element-plus/index.full.js"></script>
+    -->
+    <script src="../element-ui/vue.js"></script>
+    <link rel="stylesheet" href="../element-ui/index.css">
+    <script src="../element-ui/index.js"></script>
+    <style>
+        .el-icon-plus{
+            background-color: #fbfdff;
+            border: 1px dashed #c0ccda;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 28px;
+            color: #8c939d;
+            width: 146px;
+            height: 146px;
+            line-height: 146px;
+            text-align: center;
+        }
+        .el-icon-plus:before {
+            content: "+";
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div>Add the image pressing the + button below</div>
+    <el-upload th:action="${action}" :data="params" :on-success="imgSuccess" :before-upload="beforeAvatarUpload"
+        list-type="picture" :auto-upload="true" :show-file-list="false">
+        <i class="el-icon-plus"></i>
+    </el-upload>
+
+    <img v-if="imageUrl" :src="imageUrl" style="margin-top:50px;width: 100%;height: auto" />
+</div>
+<script th:inline="javascript">
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                imageUrl:'',
+                params:{
+                    serialNo:[[${serialNo}]], productId:[[${productId}]]
+                }
+            };
+        },
+        methods: {
+            imgSuccess(response, file, fileList){
+                if(response.success){
+                    this.imageUrl = response.filePath;
+                    this.$message({ message: '上传图片成功!', type: 'success' });
+                }else{
+                    this.imageUrl = '';
+                    this.$message.error('上传图片失败!');
+                }
+            },
+            beforeAvatarUpload(file) {
+                let fileType = false;
+                if(file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png'){
+                    fileType = true;
+                }
+
+                const fileSize = file.size / 1024 / 1024 < 50;
+
+                if (!fileType) {
+                    this.$message.error('上传图片格式不对!');
+                }
+                if (!fileSize) {
+                    this.$message.error('上传图片大小不能超过 50MB!');
+                }
+                return fileType && fileSize;
+            }
+        }
+    })
+    //const app = Vue.createApp(App);
+    //app.use(ElementPlus);
+    //app.mount("#app");
+</script>
+</body>
+</html>

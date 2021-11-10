@@ -1,0 +1,22 @@
+server:
+    port: ${port:12480}
+    servlet:
+        context-path: /print
+spring:
+    servlet:
+        multipart:
+            max-request-size: 50MB
+            max-file-size: 50MB
+    thymeleaf:
+        cache: false
+        mode: LEGACYHTML5
+        prefix: classpath:/templates/
+        suffix: .html
+    # 默认使用开发环境
+    profiles:
+        active: prod
+site:
+    app-name: print
+    basePath: @basePath@
+    printx: @print.x@
+    printw: @print.w@
